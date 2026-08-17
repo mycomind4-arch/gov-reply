@@ -1,0 +1,13 @@
+{
+  "name": "gov-reply",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Government correspondence intelligence and response workflow vertical for the MailMyPDF ecosystem",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
