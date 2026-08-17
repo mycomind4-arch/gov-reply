@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>GovReply — Government correspondence, handled.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">G</span><span>GovReply</span></div>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav>
+        <button class="nav active" data-view="overview"><span>◈</span> Overview</button>
+        <button class="nav" data-view="cases"><span>▣</span> Cases</button>
+        <button class="nav" data-view="documents"><span>□</span> Documents</button>
+        <button class="nav" data-view="deadlines"><span>◷</span> Deadlines</button>
+        <button class="nav" data-view="responses"><span>↗</span> Responses</button>
+        <button class="nav" data-view="proof"><span>✓</span> Proof</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="trust"><span class="dot"></span><div><strong>Private workspace</strong><small>Your documents stay scoped to your cases.</small></div></div>
+        <button class="account"><span class="avatar">JC</span><span>MailMyPDF account</span><span>•••</span></button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><div class="eyebrow">GOVERNMENT CORRESPONDENCE</div><h1 id="page-title">Your cases, under control.</h1></div>
+        <button class="primary" id="new-case">+ New case</button>
+      </header>
+
+      <section id="overview-view" class="view">
+        <div class="hero-card">
+          <div class="hero-copy"><div class="pill">AI CASE INTELLIGENCE</div><h2>Turn an official letter into a clear plan.</h2><p>Upload the notice. GovReply identifies what the agency is asking for, surfaces deadlines and risks, and helps you prepare a precise response grounded in the record.</p><button class="hero-button" id="hero-start">Analyze a letter <span>→</span></button></div>
+          <div class="hero-graphic"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="doc-stack"><div class="mini-doc back"></div><div class="mini-doc"><span></span><span></span><span class="short"></span><i>G</i></div></div></div>
+        </div>
+
+        <div class="section-head"><div><div class="eyebrow">AT A GLANCE</div><h3>Active work</h3></div><button class="text-btn" data-view="cases">View all cases →</button></div>
+        <div class="stats"><div class="stat"><small>ACTIVE CASES</small><strong>01</strong><span>One case needs attention</span></div><div class="stat danger"><small>NEXT DEADLINE</small><strong>28 <em>days</em></strong><span>Response required</span></div><div class="stat"><small>RESPONSES</small><strong>00</strong><span>None submitted yet</span></div><div class="stat"><small>PROOF PACKETS</small><strong>00</strong><span>Ready when you are</span></div></div>
+
+        <div class="section-head case-head"><div><div class="eyebrow">ACTIVE CASE</div><h3>County correspondence</h3></div><span class="status"><i></i> Analysis ready</span></div>
+        <article class="case-card" id="sample-case">
+          <div class="case-icon">C</div><div class="case-main"><div class="case-title">Property compliance notice</div><div class="case-meta">Humboldt County · Ref. HR-2026-0417 · Received Aug 17, 2026</div><div class="case-tags"><span>Deadline · Sep 14</span><span>1 document</span><span>0 evidence gaps</span></div></div><div class="case-action"><button class="secondary" id="open-sample">Open analysis</button><span>Updated just now</span></div>
+        </article>
+      </section>
+
+      <section id="workspace-view" class="view hidden">
+        <div class="workspace-top"><button class="back" id="back-home">← Dashboard</button><div class="case-status"><span class="status"><i></i> Analysis ready</span><span class="secure">● Evidence-aware</span></div></div>
+        <div class="case-title-row"><div><div class="eyebrow">CASE / HR-2026-0417</div><h2 id="case-name">Property compliance notice</h2><p id="case-agency">Humboldt County · Code Compliance</p></div><button class="secondary">Export case</button></div>
+        <div class="deadline-banner"><div class="deadline-symbol">!</div><div><small>RESPONSE DEADLINE</small><strong id="deadline-date">September 14, 2026</strong><span>28 days remaining · based on the notice's stated 30-day response period</span></div><button class="text-btn">Review calculation →</button></div>
+        <div class="workspace-grid">
+          <div class="analysis-column">
+            <div class="panel"><div class="panel-head"><div><span class="panel-kicker">01 · UNDERSTAND</span><h3>What the agency is asking</h3></div><span class="confidence high">High confidence</span></div><p id="summary">The notice asks you to address an identified property-compliance issue and provide written confirmation of corrective action within the stated response period.</p><div class="action-list"><div><b>01</b><span>Review the cited property condition and determine whether the agency's description is accurate.</span></div><div><b>02</b><span>Provide the requested documentation or a clear explanation of corrective action.</span></div><div><b>03</b><span>Submit the written response before the stated deadline.</span></div></div></div>
+            <div class="panel"><div class="panel-head"><div><span class="panel-kicker">02 · RECORD</span><h3>Verified facts</h3></div><button class="text-btn">View sources</button></div><div class="fact-table"><div><span>Agency</span><b>Humboldt County Code Compliance</b><em>Source · p.1</em></div><div><span>Reference</span><b>HR-2026-0417</b><em>Source · p.1</em></div><div><span>Notice date</span><b>August 17, 2026</b><em>Source · p.1</em></div><div><span>Response period</span><b>30 days</b><em>Source · p.2</em></div></div></div>
+            <div class="panel"><div class="panel-head"><div><span class="panel-kicker">03 · RESPONSE</span><h3>Recommended approach</h3></div><span class="confidence medium">Review required</span></div><div class="strategy"><div class="strategy-icon">↗</div><div><strong>Compliance response with factual clarification</strong><p>Respond directly to the requested action, preserve any disagreement with factual assertions, and attach only evidence that supports the statements you make.</p></div></div><button class="primary wide" id="build-response">Build response draft →</button></div>
+          </div>
+          <aside class="right-column">
+            <div class="panel compact"><span class="panel-kicker">RISK CHECK</span><div class="risk-row"><span class="risk-ring">2</span><div><strong>Items to review</strong><p>Nothing currently blocks drafting.</p></div></div><div class="risk-item"><span class="check">✓</span><div><b>Deadline identified</b><small>Source-backed</small></div></div><div class="risk-item"><span class="check">✓</span><div><b>Reference number found</b><small>Source-backed</small></div></div></div>
+            <div class="panel compact"><div class="panel-head"><div><span class="panel-kicker">EVIDENCE</span><h3>Case record</h3></div><button class="plus">+</button></div><div class="evidence"><div class="e-icon">PDF</div><div><b>County_Notice.pdf</b><small>2 pages · uploaded today</small></div><span class="verified">✓</span></div><div class="dropzone" id="evidence-drop">Drop supporting documents here<br><small>or click to browse</small><input type="file" id="evidence-file" hidden multiple /></div></div>
+            <div class="panel compact"><span class="panel-kicker">TIMELINE</span><div class="timeline"><div><i></i><span><b>Notice analyzed</b><small>Today · 9:14 AM</small></span></div><div><i></i><span><b>Notice received</b><small>Aug 17 · 8:42 AM</small></span></div></div></div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="response-view" class="view hidden">
+        <div class="workspace-top"><button class="back" id="back-workspace">← Case analysis</button><span class="secure">Draft · not submitted</span></div>
+        <div class="case-title-row"><div><div class="eyebrow">RESPONSE BUILDER</div><h2>Write the response with the record in view.</h2><p>GovReply drafts from verified facts and clearly labels anything that still needs your review.</p></div></div>
+        <div class="response-layout"><div class="editor-panel"><div class="editor-toolbar"><span>Formal response</span><span>Calibri · 11 pt</span></div><textarea id="response-body" spellcheck="true">August 21, 2026
+
+Humboldt County Code Compliance
+Re: Property compliance notice — Reference HR-2026-0417
+
+To the Code Compliance Officer:
+
+I am writing in response to the property compliance notice dated August 17, 2026, concerning reference HR-2026-0417.
+
+I understand that the County is requesting a written response addressing the condition identified in the notice. I am reviewing the cited condition and will provide the requested supporting documentation with this response.
+
+Please include this letter with the case record. If additional information or documentation is required to establish compliance, please identify the specific item requested so that I can address it promptly.
+
+Thank you for your attention to this matter.
+
+Sincerely,
+
+[Your name]
+[Mailing address]
+[Phone / email]</textarea><div class="editor-footer"><span>Generated from 4 verified facts · 0 unsupported factual assertions</span><button class="secondary" id="copy-response">Copy text</button></div></div><aside class="review-panel"><div class="review-score"><span>RESPONSE READINESS</span><strong>92</strong><em>/100</em><small>Strong draft · review highlighted items</small></div><div class="review-check pass"><i>✓</i><div><b>Agency and reference</b><small>Match source record</small></div></div><div class="review-check pass"><i>✓</i><div><b>Deadline context</b><small>No unsupported date claim</small></div></div><div class="review-check pass"><i>✓</i><div><b>Factual grounding</b><small>Claims trace to case facts</small></div></div><div class="review-check warn"><i>!</i><div><b>Personal details</b><small>Replace bracketed placeholders</small></div></div><div class="review-check warn"><i>!</i><div><b>Requested action</b><small>Confirm exactly what you intend to submit</small></div></div><button class="primary wide" id="prepare-proof">Prepare proof packet →</button></aside></div>
+      </section>
+
+      <section id="proof-view" class="view hidden"><div class="workspace-top"><button class="back" id="back-response">← Response</button></div><div class="proof-hero"><div class="proof-badge">✓</div><div><div class="eyebrow">PROOF PACKET</div><h2>Ready to preserve what you send.</h2><p>GovReply keeps the final response, source notice, evidence index and submission record together. Mailing remains an explicit action.</p></div></div><div class="packet"><div class="packet-row"><span>01</span><b>Final response</b><em>Ready</em></div><div class="packet-row"><span>02</span><b>Government notice</b><em>2 pages</em></div><div class="packet-row"><span>03</span><b>Evidence index</b><em>1 item</em></div><div class="packet-row"><span>04</span><b>Submission record</b><em>Pending authorization</em></div><button class="primary wide" id="authorize">Authorize submission →</button><small class="legal-note">Authorization is required before any physical mailing or external submission.</small></div></section>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <input type="file" id="case-file" accept=".pdf,.txt,.md,.doc,.docx" hidden />
+  <script src="/app.js"></script>
+</body>
+</html>
