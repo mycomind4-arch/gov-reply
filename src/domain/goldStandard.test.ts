@@ -2,17 +2,17 @@ import { describe, expect, it } from 'vitest'
 import { runGovReplyGoldWorkflow } from './goldStandard'
 
 const passed = () => ({
-  receive: async () => true,
-  understand: async () => true,
-  deadline: async () => true,
-  evidence: async () => true,
-  strategy: async () => true,
-  response: async () => true,
-  review: async () => true,
-  authorization: async () => true,
-  submission: async () => true,
-  tracking: async () => true,
-  proof: async () => true,
+  receive: async () => ({ passed: true, evidenceIds: ['receive:request'] }),
+  understand: async () => ({ passed: true, evidenceIds: ['understand:notice'] }),
+  deadline: async () => ({ passed: true, evidenceIds: ['deadline:source'] }),
+  evidence: async () => ({ passed: true, evidenceIds: ['evidence:document'] }),
+  strategy: async () => ({ passed: true, evidenceIds: ['strategy:review'] }),
+  response: async () => ({ passed: true, evidenceIds: ['response:draft'] }),
+  review: async () => ({ passed: true, evidenceIds: ['review:approval'] }),
+  authorization: async () => ({ passed: true, evidenceIds: ['authorization:actor'] }),
+  submission: async () => ({ passed: true, evidenceIds: ['submission:provider'] }),
+  tracking: async () => ({ passed: true, evidenceIds: ['tracking:number'] }),
+  proof: async () => ({ passed: true, evidenceIds: ['proof:provider'] }),
 })
 
 describe('GovReply Gold Standard workflow', () => {
@@ -23,11 +23,12 @@ describe('GovReply Gold Standard workflow', () => {
       'receive', 'understand', 'deadline', 'evidence', 'strategy', 'response',
       'review', 'authorization', 'submission', 'tracking', 'proof',
     ])
+    expect(result.stages.every(stage => stage.evidenceIds.length > 0)).toBe(true)
   })
 
   it('blocks submission when review fails', async () => {
     const dependencies = passed()
-    dependencies.review = async () => false
+    dependencies.review = async () => ({ passed: false, evidenceIds: [], message: 'review failed' })
     const result = await runGovReplyGoldWorkflow(dependencies)
 
     expect(result.status).toBe('blocked')
@@ -37,7 +38,7 @@ describe('GovReply Gold Standard workflow', () => {
 
   it('requires explicit authorization before submission', async () => {
     const dependencies = passed()
-    dependencies.authorization = async () => false
+    dependencies.authorization = async () => ({ passed: false, evidenceIds: [], message: 'authorization failed' })
     const result = await runGovReplyGoldWorkflow(dependencies)
 
     expect(result.status).toBe('blocked')
@@ -47,10 +48,20 @@ describe('GovReply Gold Standard workflow', () => {
 
   it('requires tracking and proof before completion', async () => {
     const dependencies = passed()
-    dependencies.proof = async () => false
+    dependencies.proof = async () => ({ passed: false, evidenceIds: [], message: 'proof unavailable' })
     const result = await runGovReplyGoldWorkflow(dependencies)
 
     expect(result.status).toBe('blocked')
     expect(result.stages.at(-1)?.stage).toBe('proof')
+  })
+
+  it('blocks a stage that claims success without provenance', async () => {
+    const dependencies = passed()
+    dependencies.evidence = async () => ({ passed: true, evidenceIds: [], message: 'nothing was grounded' })
+    const result = await runGovReplyGoldWorkflow(dependencies)
+
+    expect(result.status).toBe('blocked')
+    expect(result.stages.at(-1)?.stage).toBe('evidence')
+    expect(result.stages.at(-1)?.status).toBe('blocked')
   })
 })
