@@ -11,25 +11,20 @@ export type GovReplyGoldStage =
   | 'tracking'
   | 'proof'
 
+export type GovReplyGateResult = {
+  passed: boolean
+  evidenceIds: string[]
+  message?: string
+}
+
 export type GovReplyStageResult = {
   stage: GovReplyGoldStage
   status: 'passed' | 'blocked' | 'failed'
+  evidenceIds: string[]
   messages: string[]
 }
 
-export type GovReplyGoldDependencies = {
-  receive: () => Promise<boolean>
-  understand: () => Promise<boolean>
-  deadline: () => Promise<boolean>
-  evidence: () => Promise<boolean>
-  strategy: () => Promise<boolean>
-  response: () => Promise<boolean>
-  review: () => Promise<boolean>
-  authorization: () => Promise<boolean>
-  submission: () => Promise<boolean>
-  tracking: () => Promise<boolean>
-  proof: () => Promise<boolean>
-}
+export type GovReplyGoldDependencies = Record<GovReplyGoldStage, () => Promise<GovReplyGateResult>>
 
 export type GovReplyGoldResult = {
   status: 'completed' | 'blocked' | 'failed'
@@ -40,33 +35,38 @@ export async function runGovReplyGoldWorkflow(
   dependencies: GovReplyGoldDependencies,
 ): Promise<GovReplyGoldResult> {
   const stages: GovReplyStageResult[] = []
-  const ordered: Array<[GovReplyGoldStage, () => Promise<boolean>]> = [
-    ['receive', dependencies.receive],
-    ['understand', dependencies.understand],
-    ['deadline', dependencies.deadline],
-    ['evidence', dependencies.evidence],
-    ['strategy', dependencies.strategy],
-    ['response', dependencies.response],
-    ['review', dependencies.review],
-    ['authorization', dependencies.authorization],
-    ['submission', dependencies.submission],
-    ['tracking', dependencies.tracking],
-    ['proof', dependencies.proof],
+  const ordered: GovReplyGoldStage[] = [
+    'receive', 'understand', 'deadline', 'evidence', 'strategy', 'response',
+    'review', 'authorization', 'submission', 'tracking', 'proof',
   ]
 
-  for (const [stage, action] of ordered) {
+  for (const stage of ordered) {
     try {
-      const passed = await action()
+      const result = await dependencies[stage]()
+      const evidenceIds = result.evidenceIds.filter((id) => id.trim().length > 0)
+      if (result.passed && evidenceIds.length === 0) {
+        stages.push({
+          stage,
+          status: 'blocked',
+          evidenceIds,
+          messages: [result.message ?? `${stage} passed without evidence; Gold Standard execution requires provenance.`],
+        })
+        return { status: 'blocked', stages }
+      }
+
+      const status = result.passed ? 'passed' : 'blocked'
       stages.push({
         stage,
-        status: passed ? 'passed' : 'blocked',
-        messages: passed ? [] : [`${stage} gate did not pass`],
+        status,
+        evidenceIds,
+        messages: result.passed ? [] : [result.message ?? `${stage} gate did not pass`],
       })
-      if (!passed) return { status: 'blocked', stages }
+      if (!result.passed) return { status: 'blocked', stages }
     } catch (error) {
       stages.push({
         stage,
         status: 'failed',
+        evidenceIds: [],
         messages: [error instanceof Error ? error.message : String(error)],
       })
       return { status: 'failed', stages }
