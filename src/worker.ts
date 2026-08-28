@@ -67,7 +67,19 @@ export default { async fetch(request:Request, env:Env){
       if(!intentResponse.ok) return json({error:'Unable to create mailing intent.'},502);
       const rows=await intentResponse.json() as Array<{id:string}>; const intentId=rows[0]?.id; if(!intentId) return json({error:'Unable to create mailing intent.'},502);
       const appUrl=env.APP_URL||url.origin;
-      const session=await createStripeCheckout(env.STRIPE_SECRET_KEY,{'mode':'payment','line_items[0][quantity]':'1','line_items[0][price_data][currency]':'usd','line_items[0][price_data][unit_amount]':String(PRICES[method]),'line_items[0][price_data][product_data][name]':`${method} government correspondence`,`metadata[mailing_intent_id]`:intentId,'metadata[owner_user_id]':user.id,'metadata[workflow_id]':input.workflowId,success_url:`${appUrl}/?checkout=success&session_id={CHECKOUT_SESSION_ID}`,cancel_url:`${appUrl}/?checkout=cancelled`});
+      const params: Record<string, string> = {
+        'mode': 'payment',
+        'line_items[0][quantity]': '1',
+        'line_items[0][price_data][currency]': 'usd',
+        'line_items[0][price_data][unit_amount]': String(PRICES[method]),
+        'line_items[0][price_data][product_data][name]': `${method} government correspondence`,
+        'metadata[mailing_intent_id]': intentId,
+        'metadata[owner_user_id]': user.id,
+        'metadata[workflow_id]': input.workflowId,
+        'success_url': `${appUrl}/?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
+        'cancel_url': `${appUrl}/?checkout=cancelled`,
+      };
+      const session=await createStripeCheckout(env.STRIPE_SECRET_KEY, params);
       await db(env,`mailing_intents?id=eq.${encodeURIComponent(intentId)}`,{method:'PATCH',body:JSON.stringify({stripe_session_id:session.id})});
       return json({ok:true,checkoutUrl:session.url,sessionId:session.id});
     }catch(error){ return json({error:error instanceof Error?error.message:'Unable to start checkout.'},(error as {status?:number})?.status||502); }
