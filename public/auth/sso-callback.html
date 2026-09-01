@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Signing you in — GovReply</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f6f1e7; display: flex; min-height: 100vh; align-items: center; justify-content: center; margin: 0; }
+    .card { max-width: 28rem; text-align: center; padding: 2rem; }
+    h1 { font-size: 1.75rem; font-weight: 400; margin: 0 0 1rem; }
+    p { color: #6b7280; font-size: 0.875rem; }
+    .error { color: #dc2626; }
+    a { display: inline-block; margin-top: 1.5rem; padding: 0.5rem 1.25rem; border-radius: 9999px; background: #1a1d2e; color: #fff; text-decoration: none; font-size: 0.875rem; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 id="title">Signing you in…</h1>
+    <p id="msg">Connecting your MailMyPDF account.</p>
+    <a id="back" href="/" style="display:none">Back to sign in</a>
+  </div>
+  <script>
+    (async function() {
+      var hash = window.location.hash.slice(1);
+      var params = new URLSearchParams(hash);
+      var accessToken = params.get('access_token');
+      var refreshToken = params.get('refresh_token');
+      var expiresIn = params.get('expires_in');
+      var returnTo = params.get('return_to');
+
+      if (!accessToken || !refreshToken) {
+        document.getElementById('title').textContent = 'Sign-in problem';
+        document.getElementById('msg').textContent = 'Missing authentication tokens. Please try signing in again.';
+        document.getElementById('msg').className = 'error';
+        document.getElementById('back').style.display = 'inline-block';
+        return;
+      }
+
+      try {
+        // Fetch user info from Supabase
+        var configRes = await fetch('/api/auth/config');
+        var config = configRes.ok ? await configRes.json() : null;
+        if (!config || !config.configured) {
+          document.getElementById('title').textContent = 'Sign-in problem';
+          document.getElementById('msg').textContent = 'Account services are not configured.';
+          document.getElementById('msg').className = 'error';
+          document.getElementById('back').style.display = 'inline-block';
+          return;
+        }
+
+        var userRes = await fetch(config.url + '/auth/v1/user', {
+          headers: { 'apikey': config.anonKey, 'Authorization': 'Bearer ' + accessToken }
+        });
+        var user = userRes.ok ? await userRes.json() : null;
+
+        // Store session in localStorage — GovReply app.js reads auth from API
+        // so we just need to store the tokens for the API to use
+        var stored = {
+          access_token: accessToken,
+          refresh_token: refreshToken,
+          expires_at: Date.now() + (parseInt(expiresIn) || 3600) * 1000,
+          user: { id: user ? user.id : '', email: user ? (user.email || '') : '' }
+        };
+        localStorage.setItem('mailmypdf_session', JSON.stringify(stored));
+
+        if (window.self !== window.top) {
+          window.parent.postMessage({ type: 'sso-callback', success: true, origin: window.location.origin }, '*');
+          return;
+        }
+
+        window.location.href = returnTo || '/';
+      } catch (err) {
+        document.getElementById('title').textContent = 'Sign-in problem';
+        document.getElementById('msg').textContent = err && err.message ? err.message : 'Failed to establish session.';
+        document.getElementById('msg').className = 'error';
+        document.getElementById('back').style.display = 'inline-block';
+      }
+    })();
+  </script>
+</body>
+</html>

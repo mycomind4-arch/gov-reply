@@ -40,6 +40,7 @@ async function createStripeCheckout(secret: string, params: Record<string, strin
 export default { async fetch(request:Request, env:Env){
   const url=new URL(request.url);
   if(url.pathname==='/api/health') return json({ok:true,service:'govreply'});
+  if(url.pathname==='/api/auth/config'&&request.method==='GET') return json({configured:Boolean(env.SUPABASE_URL&&env.SUPABASE_ANON_KEY),url:env.SUPABASE_URL||null,anonKey:env.SUPABASE_ANON_KEY||null});
   if(url.pathname==='/api/auth/status'&&request.method==='GET'){
     try { const user=await requireUser(request,env); return json({configured:true,authenticated:true,user}); }
     catch(error){ return json({configured:Boolean(env.SUPABASE_URL&&env.SUPABASE_ANON_KEY),authenticated:false,error:error instanceof Error?error.message:'Not authenticated'},401); }
