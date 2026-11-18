@@ -1,0 +1,12 @@
+{
+  "id": "uscis-i-130",
+  "name": "Petition for Alien Relative",
+  "status": "scaffold_unverified",
+  "capabilities": [
+    "user_directed_data_collection",
+    "field_consistency_checks",
+    "draft_preview"
+  ],
+  "sources": [],
+  "reviewed_at": null
+}
