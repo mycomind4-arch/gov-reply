@@ -9,7 +9,8 @@
     ],
     "types": [
       "@cloudflare/workers-types",
-      "vitest/globals"
+      "vitest/globals",
+      "node"
     ],
     "strict": true,
     "noEmit": true,
