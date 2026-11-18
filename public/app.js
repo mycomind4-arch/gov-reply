@@ -1,6 +1,6 @@
 import {layout,escapeHTML} from "./components.js";
-import {home,expert,forms,cases,professionals,sources,dossierCard,documents} from "./pages.js";
-const views={"/":home,"/expert":expert,"/forms":forms,"/cases":cases,"/professionals":professionals,"/sources":sources,"/documents":documents};
+import {home,expert,forms,cases,professionals,sources,dossierCard,documents,fillPdf} from "./pages.js";
+const views={"/":home,"/expert":expert,"/forms":forms,"/cases":cases,"/professionals":professionals,"/sources":sources,"/documents":documents,"/fill-pdf":fillPdf};
 const path=location.pathname.replace(/\/$/,"")||"/";
 document.getElementById("app").innerHTML=layout(path,(views[path]||(()=>'<main class="shell content"><h1>Page not found</h1><a href="/">Return home</a></main>'))());
 const questionForm=document.getElementById("question-form");
@@ -13,3 +13,5 @@ async function loadCatalog(){if(path==="/forms"){const target=document.getElemen
 loadCatalog();
 
 if(path==="/documents"){import("./pdf-editor.bundle.js").catch(()=>{const status=document.getElementById("pdf-status");if(status)status.textContent="PDF engine unavailable. Try again later.";});}
+
+if(path==="/fill-pdf"){import("./form-editor.bundle.js").catch(()=>{const el=document.getElementById("form-status");if(el)el.textContent="Form engine unavailable.";});}

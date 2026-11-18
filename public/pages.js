@@ -9,3 +9,5 @@ export function sources(){return pageHeader("Official Sources","Direct links to 
 export function dossierCard(d){return card(d.id,`<p>${escapeHTML(d.title)}</p><span class="status">Unverified · Not enabled</span>`);}
 
 export { documents } from "./document-page.js";
+
+export {fillPdf} from "./form-page.js";

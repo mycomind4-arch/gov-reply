@@ -9,7 +9,7 @@
     "deploy": "npm run build:client && wrangler deploy",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "build:client": "esbuild client/pdf-editor.js --bundle --format=esm --platform=browser --target=es2022 --outfile=public/pdf-editor.bundle.js"
+    "build:client": "esbuild client/pdf-editor.js client/form-editor.js --bundle --format=esm --platform=browser --target=es2022 --outdir=public --entry-names=[name].bundle"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260101.0",
