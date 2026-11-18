@@ -4,17 +4,22 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
-    "build": "wrangler deploy --dry-run",
-    "deploy": "wrangler deploy",
+    "dev": "npm run build:client && wrangler dev",
+    "build": "npm run build:client && wrangler deploy --dry-run",
+    "deploy": "npm run build:client && wrangler deploy",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:client": "esbuild client/pdf-editor.js --bundle --format=esm --platform=browser --target=es2022 --outfile=public/pdf-editor.bundle.js"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260101.0",
     "@types/node": "^22.0.0",
     "typescript": "^5.7.3",
     "vitest": "^3.0.0",
-    "wrangler": "^4.0.0"
+    "wrangler": "^4.0.0",
+    "esbuild": "^0.25.0"
+  },
+  "dependencies": {
+    "pdf-lib": "1.17.1"
   }
 }
