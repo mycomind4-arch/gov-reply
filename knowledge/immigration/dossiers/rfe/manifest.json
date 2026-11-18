@@ -1,0 +1,19 @@
+{
+  "id": "uscis-rfe",
+  "name": "USCIS Request for Evidence",
+  "status": "scaffold_unverified",
+  "capabilities": [
+    "notice_classification",
+    "source_page_extraction",
+    "requested_item_inventory",
+    "deadline_text_capture",
+    "human_review"
+  ],
+  "prohibited": [
+    "automatic_legal_strategy",
+    "unverified_deadline_calculation",
+    "automatic_filing"
+  ],
+  "sources": [],
+  "reviewed_at": null
+}
