@@ -1,20 +1,19 @@
 {
-  "name": "gov-reply",
+  "name": "immigration-expert-engine",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.2.0",
   "type": "module",
-  "description": "Government correspondence intelligence and response workflow vertical for the MailMyPDF ecosystem",
   "scripts": {
     "dev": "wrangler dev",
     "build": "wrangler deploy --dry-run",
+    "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "check": "wrangler check",
-    "deploy": "wrangler deploy"
+    "test": "vitest run"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "vitest": "latest",
+    "@cloudflare/workers-types": "^4.20260101.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.0",
     "wrangler": "^4.0.0"
   }
 }

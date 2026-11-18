@@ -1,93 +1,26 @@
-# GovReply
+# Immigration Expert Engine
 
-**Understand government correspondence. Know what you need to do. Build the right response. Preserve proof.**
+Fresh standalone implementation in the gov-reply repository. This project is independent of MailMyPDF. No real immigration filings, legal advice, payments, or mailings are performed.
 
-GovReply is a MailMyPDF ecosystem vertical for analyzing government correspondence, organizing facts and evidence, identifying response deadlines, developing response strategies, preparing professional responses, and preserving submission proof.
+## Run locally
+```bash
+npm install
+npm test
+npm run typecheck
+npm run dev
+```
 
-## Current product
+The Cloudflare Worker serves a static responsive interface and read-only source catalog. API endpoints provide official source discovery, dossier metadata, and deterministic clerical consistency checks. No uploaded identity documents are persisted.
 
-The first product slice is intentionally focused rather than overbuilt:
+## API
+- GET /api/health
+- GET /api/sources
+- GET /api/dossiers
+- POST /api/validate (JSON with `facts` object)
 
-`RECEIVE → UNDERSTAND → DEADLINE → EVIDENCE → STRATEGY → RESPONSE → REVIEW → PROOF`
+The official source registry is a directory, **not** a claim that current editions, fees, or eligibility rules have been verified. Check official pages before filing.
 
-The UI is a polished case workspace with a source-grounded analysis endpoint and a response-review workflow. Text documents can be sent to `/api/analyze`; PDFs are reserved for the shared MailMyPDF document-extraction boundary so page-level provenance is not faked in the vertical.
+## Next milestones
+Secure authentication and tenant-isolated case storage; sandboxed document parsing; source snapshots and citation provenance; reviewed form versions; professional credential verification; PDF packet previews and immutable approvals; independent legal/security review.
 
-## AI quality bar
-
-Analysis is structured around:
-
-- document identity
-- plain-English explanation
-- requested actions
-- explicit deadlines and their source language
-- source-backed facts
-- unknowns
-- warnings and conflicts
-- response strategy
-- professional response draft
-- review checks
-
-The AI prompt explicitly forbids invented facts, deadlines, statutes, procedural rights, or claims of compliance. AI interpretations remain reviewable rather than silently becoming verified facts.
-
-## Architecture
-
-GovReply is intentionally a **vertical application**, not a second platform. It consumes reusable MailMyPDF Platform capabilities and keeps government-correspondence-specific intelligence here.
-
-### Reuse from MailMyPDF Platform
-
-- structured document intelligence
-- evidence/provenance primitives
-- timeline/event primitives
-- AI orchestration boundaries
-- workflow contracts
-- validation and QA patterns
-- ecosystem identity/entitlement contracts
-- proof and fulfillment integration boundaries
-- shared design-system patterns
-- security boundaries
-
-### GovReply owns
-
-- government correspondence taxonomy
-- notice/letter requirement extraction
-- deadline interpretation and presentation
-- case facts, claims, unknowns, and conflicts
-- government-response strategies
-- response types and guided response workflows
-- domain-specific prompts and validators
-- GovReply case workspace and UX
-
-## Cloudflare
-
-GovReply is configured as a Cloudflare Worker with static assets and a Workers AI binding. The current AI implementation uses Cloudflare's `@cf/openai/gpt-oss-20b` model for the first production slice; the model is isolated behind the `/api/analyze` boundary so the platform can later provide provider-neutral routing.
-
-GitHub Actions deployment expects these repository secrets:
-
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ACCOUNT_ID`
-
-The deployment workflow runs `wrangler deploy` on pushes to `main`.
-
-## Skills
-
-Reusable end-to-end vertical skills live in `skills/`:
-
-- `vertical-audit` — audit platform reuse and establish boundaries
-- `vertical-ai` — build source-grounded analysis and response generation safely
-- `vertical-product` — build a focused, polished vertical workflow
-- `vertical-ship` — validate, deploy and verify a vertical
-
-## Safety and trust principles
-
-- Uploaded documents are untrusted input.
-- AI output is never silently promoted to a verified fact.
-- Every important extracted fact retains provenance.
-- Uncertain deadlines are explicitly labeled as uncertain.
-- Consequential actions such as mailing require explicit authorization.
-- GovReply does not present itself as a substitute for legal counsel.
-
-## Development
-
-This repository is being built incrementally against the reusable contracts in `mycomind4-arch/mailmypdf-platform`.
-
-No sub-agents are used for implementation.
+Do not use this prototype for live case handling.
